@@ -1,24 +1,10 @@
 import React from 'react';
-import logo from '../assets/logo.svg';
 import '../styles/ui.css';
+import { webLightTheme, FluentProvider, Text } from '@fluentui/react-components';
+import { OutputCard } from '@fluentui-copilot/react-copilot';
+import { CopilotProvider } from '@fluentui-copilot/react-copilot';
 
 function App() {
-  const textbox = React.useRef<HTMLInputElement>(undefined);
-
-  const countRef = React.useCallback((element: HTMLInputElement) => {
-    if (element) element.value = '5';
-    textbox.current = element;
-  }, []);
-
-  const onCreate = () => {
-    const count = parseInt(textbox.current.value, 10);
-    parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*');
-  };
-
-  const onCancel = () => {
-    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
-  };
-
   React.useEffect(() => {
     // This is how we read messages sent from the plugin controller
     window.onmessage = (event) => {
@@ -31,15 +17,20 @@ function App() {
 
   return (
     <div>
-      <img src={logo} />
-      <h2>Rectangle Creator</h2>
-      <p>
-        Count: <input ref={countRef} />
-      </p>
-      <button id="create" onClick={onCreate}>
-        Create
-      </button>
-      <button onClick={onCancel}>Cancel</button>
+      <FluentProvider theme={webLightTheme}>
+      <CopilotProvider
+        mode="sidecar" //or 'canvas'
+        themeExtension={{
+          colorBrandFlair1: 'red', // replace with your brand colors
+          colorBrandFlair2: 'blue',
+          colorBrandFlair3: 'green',
+        }}
+      >
+        <OutputCard progress={{ value: undefined }} isLoading>
+          <Text>Welcome to Fluent AI Copilot</Text>
+        </OutputCard>
+      </CopilotProvider>
+    </FluentProvider>
     </div>
   );
 }
